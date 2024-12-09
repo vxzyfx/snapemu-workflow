@@ -24,9 +24,11 @@ jobs:
       run: rustup target add aarch64-unknown-linux-musl
     - name: Setup
       run: source ./.github/setup.sh
+    - name: 'Tar files'
+      run: tar -Jcf bin.tar.xz bin
     - uses: actions/download-artifact@v4
       with:
-        path: bin
-        merge-multiple: true
+        name: bin-artifact
+        path: bin.tar.xz
     - name: Display structure of downloaded files
       run: ls -R bin
