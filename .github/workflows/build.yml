@@ -26,7 +26,7 @@ jobs:
       run: source ./.github/setup.sh
     - name: 'Tar files'
       run: tar -Jcf bin.tar.xz bin
-    - uses: actions/download-artifact@v4
+    - uses: actions/upload-artifact@v4
       with:
         name: bin-artifact
         path: bin.tar.xz
