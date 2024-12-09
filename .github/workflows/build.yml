@@ -9,7 +9,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
-  CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER: aarch64-linux-gnu-gcc
+  CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER: aarch64-linux-musl-gcc
   SNAPEMU_DEVICE_VERSION: v1
   SNAPEMU_API_VERSION: v1
 jobs:
@@ -22,5 +22,7 @@ jobs:
       run: sudo apt-get install gcc-aarch64-linux-gnu
     - name: Install target
       run: rustup target add aarch64-unknown-linux-musl
+    - name: Setup
+      run: source ./.github/setup.sh
     - name: Build
-      run: cargo build  --target=aarch64-unknown-linux-musl  --verbose
+      run: cargo build  --target=aarch64-unknown-linux-musl
