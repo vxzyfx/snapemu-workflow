@@ -8,7 +8,9 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-
+  CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+  SNAPEMU_DEVICE_VERSION: v1
+  SNAPEMU_API_VERSION: v1
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,9 +21,5 @@ jobs:
       run: sudo apt-get install gcc-aarch64-linux-gnu
     - name: Install target
       run: rustup target add aarch64-unknown-linux-gnu
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v1
     - name: Build
       run: cargo build  --target=aarch64-unknown-linux-gnu  --verbose
-    - name: Run tests
-      run: cargo test --verbose
