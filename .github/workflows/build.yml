@@ -22,6 +22,11 @@ jobs:
          - x86_64-apple-darwin
          - x86_64-pc-windows-gnu
         os: [ ubuntu-24.04 ]
+        include:
+          - target: aarch64-apple-darwin
+            os: macos-15
+          - target: x86_64-apple-darwin
+            os: macos-15
     runs-on: ${{matrix.os}}
     steps:
     - uses: actions/checkout@v4
@@ -55,8 +60,15 @@ jobs:
     - name: Cache
       uses: Swatinem/rust-cache@v2.7.5
     - name: Build 
+      run: cargo build  --target=${{matrix.target}} --release
+    - name: Copy windows target 
+      if: matrix.target == 'x86_64-pc-windows-gnu'
       run: | 
-        cargo build  --target=${{matrix.target}} --release
+        mkdir -p snapemu_${{matrix.target}}/
+        cp target/${{matrix.target}}/release/snap_api.exe snapemu_${{matrix.target}}/snap_api_${{matrix.target}}
+    - name: Copy 
+      if: matrix.target != 'x86_64-pc-windows-gnu'
+      run: | 
         mkdir -p snapemu_${{matrix.target}}/
         cp target/${{matrix.target}}/release/snap_api snapemu_${{matrix.target}}/snap_api_${{matrix.target}}
     - name: 'Tar files'
