@@ -19,10 +19,9 @@ jobs:
          - aarch64-unknown-linux-musl 
          - x86_64-unknown-linux-gnu 
          - x86_64-unknown-linux-musl
-        os: [ ubuntu-24.04 ]
     outputs:
       target: ${{matrix.target}}
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
     - name: Setup environments
@@ -68,4 +67,11 @@ jobs:
     needs: build
     runs-on: ubuntu-24.04
     steps:
-      - run: echo ${{ needs.build.outputs.target }} ${{ needs.build.outputs.os }} 
+    - name: Download All Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: snapemu
+        pattern: snapemu-*
+        merge-multiple: true
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v1
