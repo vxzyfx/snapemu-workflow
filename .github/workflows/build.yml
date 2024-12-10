@@ -102,13 +102,15 @@ jobs:
       run: |
         for file in snapemu/*.tar.xz; do
         	basename="$(basename ${file})"
+          URL="${UPLOAD_URL%\{?name,label\}}"?name=${basename}
+          echo "Upload URL ${URL}"
         	curl -L \
             -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${GITHUB_TOKEN}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -H "Content-Type: application/octet-stream" \
-            "${UPLOAD_URL}?name=${basename}" \
+            "$URL" \
             --data-binary "@${file}"
         done
         
