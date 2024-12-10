@@ -37,6 +37,11 @@ jobs:
                 tar xf aarch64-linux-musl-cross.tgz
                 echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER=$PWD/aarch64-linux-musl-cross/bin/aarch64-linux-musl-gcc" >> $GITHUB_ENV
                 ;;
+            x86_64-unknown-linux-musl)
+                sudo apt-get update
+                sudo apt-get install musl-tools
+                echo "CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=musl-gcc" >> $GITHUB_ENV
+                ;;
             *)
                 ;;
         esac
