@@ -11,15 +11,18 @@ env:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         target:
          - aarch64-unknown-linux-gnu 
          - aarch64-unknown-linux-musl 
          - x86_64-unknown-linux-gnu 
          - x86_64-unknown-linux-musl
-    outputs:
-      target: ${{matrix.target}}
-    runs-on: ubuntu-24.04
+         - aarch64-apple-darwin
+         - x86_64-apple-darwin
+         - x86_64-pc-windows-gnu
+        os: [ ubuntu-24.04 ]
+    runs-on: ${{matrix.os}}
     steps:
     - uses: actions/checkout@v4
     - name: Setup environments
@@ -46,8 +49,6 @@ jobs:
         esac
     - name: Cache
       uses: Swatinem/rust-cache@v2.7.5
-    - name: Env
-      run: env
     - name: Build 
       run: | 
         cargo build  --target=${{matrix.target}} --release
