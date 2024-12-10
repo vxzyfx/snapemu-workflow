@@ -80,6 +80,9 @@ jobs:
   package:
     needs: build
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
     - name: Download All Artifacts
       uses: actions/download-artifact@v4
@@ -87,5 +90,5 @@ jobs:
         path: snapemu
         pattern: snapemu_*
         merge-multiple: true
-    - name: Show tree
-      run: tree
+    - name: release
+      uses: release-drafter/release-drafter@v5
