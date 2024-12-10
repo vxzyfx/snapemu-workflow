@@ -24,6 +24,6 @@ jobs:
         echo $tmpstr >> "$GITHUB_OUTPUT"
     - name: Release
       env:
-        FILES: ${{ join(fromJSON(steps.assets.outputs.release), '\n') }}
+        FILES: ${{ join(fromJSON(steps.assets.outputs.release).files, '\n') }}
       run: |
         echo $FILES
