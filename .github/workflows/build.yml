@@ -53,10 +53,10 @@ jobs:
     - name: Build 
       run: | 
         cargo build  --target=${{matrix.target}} --release
-        mkdir -p snapemu/
-        cp target/${{matrix.target}}/release/snap_api snapemu/snap_api_${{matrix.target}}
+        mkdir -p snapemu_${{matrix.target}}/
+        cp target/${{matrix.target}}/release/snap_api snapemu_${{matrix.target}}/snap_api_${{matrix.target}}
     - name: 'Tar files'
-      run: tar -Jcf snapemu_${{matrix.target}}.tar.xz snapemu
+      run: tar -Jcf snapemu_${{matrix.target}}.tar.xz snapemu_${{matrix.target}}
     - uses: actions/upload-artifact@v4
       with:
         name: snapemu_${{matrix.target}}-artifact
