@@ -14,6 +14,9 @@ jobs:
     - id: assets
       name: assets
       run: |
+        mkdir snapemu
+        touch snapemu/1.tar.xz
+        touch snapemu/2.tar.xz
         tmpstr='release={"files":['
         for file in snapemu/*.tar.xz; do
           tmpstr="${tmpstr}\"$file\","
