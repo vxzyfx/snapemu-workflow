@@ -23,7 +23,7 @@ jobs:
           tmpstr="${tmpstr}$file\n"
         done
         echo 'release<<EOF' >> $GITHUB_OUTPUT
-        ecjo -e $tmpstr >> $GITHUB_OUTPUT
+        echo -e $tmpstr >> $GITHUB_OUTPUT
         echo 'EOF' >> $GITHUB_OUTPUT
     - name: Release
       env:
