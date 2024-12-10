@@ -44,6 +44,11 @@ jobs:
                 sudo apt-get install musl-tools
                 echo "CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=musl-gcc" >> $GITHUB_ENV
                 ;;
+            x86_64-pc-windows-gnu)
+                sudo apt-get update
+                sudo apt-get install gcc-mingw-w64
+                echo "CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=x86_64-w64-mingw32-gcc" >> $GITHUB_ENV
+                ;;
             *)
                 ;;
         esac
