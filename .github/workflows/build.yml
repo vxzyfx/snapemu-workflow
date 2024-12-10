@@ -8,33 +8,47 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
-  CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER: aarch64-linux-musl-gcc
   SNAPEMU_DEVICE_VERSION: v1
   SNAPEMU_API_VERSION: v1
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        target: [ aarch64-unknown-linux-gnu aarch64-unknown-linux-musl x86_64-unknown-linux-gnu x86_64-unknown-linux-musl ]
+        os: [ ubuntu-24.04 ]
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
-    - name: Install gcc
-      run: sudo apt-get install gcc-aarch64-linux-gnu
-    - name: Install target
-      run: rustup target add aarch64-unknown-linux-musl
+    - name: Setup environments
+      run: |
+        rustup target add ${{matrix.target}}
+        case "${{matrix.target}}" in
+            aarch64-unknown-linux-gnu)
+                sudo apt-get update
+                sudo apt-get install gcc-aarch64-linux-gnu
+                echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
+                ;;
+            aarch64-unknown-linux-musl)
+                wget https://musl.cc/aarch64-linux-musl-cross.tgz
+                tar xf aarch64-linux-musl-cross.tgz
+                echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER=$PWD/aarch64-linux-musl-cross/bin/aarch64-linux-musl-gcc" >> $GITHUB_ENV
+                ;;
+            *)
+                ;;
+        esac
     - name: Cache
       uses: Swatinem/rust-cache@v2.7.5
-    - name: Setup musl
-      run: |
-        wget https://musl.cc/aarch64-linux-musl-cross.tgz
-        tar xf aarch64-linux-musl-cross.tgz
-        echo "PATH=$PWD/aarch64-linux-musl-cross/bin:$PATH" >> $GITHUB_ENV
     - name: Env
       run: env
     - name: Build 
       run: | 
-        cargo build  --target=aarch64-unknown-linux-musl --release
-        mkdir bin/
-        cp target/aarch64-unknown-linux-musl/release/snap_api bin/
+        cargo build  --target=${{matrix.target}} --release
+        mkdir -p bin/
+        cp target/${{matrix.target}}/release/snap_api bin/snap_api_${{matrix.target}}
+  job2:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
     - name: 'Tar files'
       run: tar -Jcf bin.tar.xz bin
     - uses: actions/upload-artifact@v4
