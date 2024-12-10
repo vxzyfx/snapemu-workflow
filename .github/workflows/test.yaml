@@ -14,19 +14,9 @@ jobs:
     - id: assets
       name: assets
       run: |
-        mkdir snapemu
-        touch snapemu/1.tar.xz
-        touch snapemu/2.tar.xz
-        tmpstr='release={"files":['
-        for file in snapemu/*.tar.xz; do
-          tmpstr="${tmpstr}\"$file\","
-        done
-        tmpstr=${tmpstr%,}
-        tmpstr="${tmpstr}]}"
-        echo $tmpstr
-        echo $tmpstr >> "$GITHUB_OUTPUT"
+        echo -e "release=\"hloo\ngg\"" >> "$GITHUB_OUTPUT"
     - name: Release
       env:
-        FILES: "${{ join(fromJSON(steps.assets.outputs.release).files, \"\n\") }}"
+        FILES: ${{ steps.assets.outputs.release }}
       run: |
         echo $FILES
