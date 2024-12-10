@@ -7,8 +7,8 @@ on:
       - "v*"
 env:
   CARGO_TERM_COLOR: always
-  SNAPEMU_DEVICE_VERSION: v1
-  SNAPEMU_API_VERSION: v1
+  SNAPEMU_DEVICE_VERSION: ${{ github.ref_name }}
+  SNAPEMU_API_VERSION: ${{ github.ref_name }}
 jobs:
   build:
     strategy:
