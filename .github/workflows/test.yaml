@@ -1,0 +1,29 @@
+name: test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+    - id: assets
+      name: assets
+      run: |
+        tmpstr='release={"files":['
+        for file in snapemu/*.tar.xz; do
+          tmpstr="${tmpstr}\"$file\","
+        done
+        tmpstr=${tmpstr%,}
+        tmpstr="${tmpstr}]}"
+        echo $tmpstr
+        echo $tmpstr >> "$GITHUB_OUTPUT"
+    - name: Release
+      env:
+        FILES: ${{ join(fromJSON(steps.assets.outputs.release), '\n') }}
+      run: |
+        echo $FILES
