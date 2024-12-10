@@ -94,15 +94,14 @@ jobs:
     - id: assets
       name: assets
       run: |
-        tmpstr='release={"files":['
+        tmpstr=''
         for file in snapemu/*.tar.xz; do
-          tmpstr="${tmpstr}\"$file\","
+          tmpstr="${tmpstr}$file\n"
         done
-        tmpstr=${tmpstr%,}
-        tmpstr="${tmpstr}]}"
-        echo $tmpstr
-        echo $tmpstr >> "$GITHUB_OUTPUT"
+        echo 'release<<EOF' >> $GITHUB_OUTPUT
+        echo -e $tmpstr >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_OUTPUT
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
-        files: ${{ join(fromJSON(steps.assets.outputs.release), '\n') }}
+        files: ${{ steps.assets.outputs.release }}
