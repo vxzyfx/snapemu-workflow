@@ -20,6 +20,8 @@ jobs:
          - x86_64-unknown-linux-gnu 
          - x86_64-unknown-linux-musl
         os: [ ubuntu-24.04 ]
+    outputs:
+      target: ${{matrix.target}}
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
@@ -61,5 +63,9 @@ jobs:
         name: snapemu_${{matrix.target}}-artifact
         path: snapemu_${{matrix.target}}.tar.xz
     - name: Display structure of downloaded files
-      run: ls -R snapemu
-
+      run: ls -R snapemu  
+  package:
+    needs: build
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: echo ${{ needs.build.outputs.target }} ${{ needs.build.outputs.os }} 
