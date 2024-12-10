@@ -77,20 +77,27 @@ jobs:
       with:
         name: snapemu_${{matrix.target}}-artifact
         path: snapemu_${{matrix.target}}.tar.xz
-  package:
+  release:
     needs: build
     runs-on: ubuntu-24.04
     permissions:
       contents: write
       pull-requests: write
     steps:
+    - id: drafter
+      name: drafter
+      uses: release-drafter/release-drafter@v5
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Download All Artifacts
       uses: actions/download-artifact@v4
       with:
         path: snapemu
         pattern: snapemu_*
         merge-multiple: true
-    - name: release
-      uses: release-drafter/release-drafter@v5
+    - name: Upload asset
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPLOAD_URL: ${{ steps.drafter.outputs.upload_url }}
+      run: env
+        
