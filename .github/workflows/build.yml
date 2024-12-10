@@ -63,12 +63,14 @@ jobs:
       if: matrix.target == 'x86_64-pc-windows-gnu'
       run: | 
         mkdir -p snapemu_${{matrix.target}}/
-        cp target/${{matrix.target}}/release/snap_api.exe snapemu_${{matrix.target}}/snap_api_${{matrix.target}}
+        cp target/${{matrix.target}}/release/snap_api.exe snapemu_${{matrix.target}}/snap_api_${{matrix.target}}.exe
+        cp target/${{matrix.target}}/release/devices_manager.exe snapemu_${{matrix.target}}/devices_manager_${{matrix.target}}.exe
     - name: Copy 
       if: matrix.target != 'x86_64-pc-windows-gnu'
       run: | 
         mkdir -p snapemu_${{matrix.target}}/
         cp target/${{matrix.target}}/release/snap_api snapemu_${{matrix.target}}/snap_api_${{matrix.target}}
+        cp target/${{matrix.target}}/release/devices_manager snapemu_${{matrix.target}}/devices_manager_${{matrix.target}}
     - name: 'Tar files'
       run: tar -Jcf snapemu_${{matrix.target}}.tar.xz snapemu_${{matrix.target}}
     - uses: actions/upload-artifact@v4
